@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const (
+var (
 	ContentTypeTextXml = []byte("text/xml")
 	ContentTypeHtml    = []byte("text/html; charset=utf-8")
 	ContentTypeTextCss = []byte("text/css; charset=utf-8")
@@ -42,7 +42,7 @@ func Request(method, url string, body io.Reader, deadline, dialTimeout time.Dura
 	}
 
 	if contentType != nil {
-		req.Header.Set("Content-Type", contentType)
+		req.Header.Set("Content-Type", string(contentType))
 	}
 
 	resp, err := client.Do(req)
