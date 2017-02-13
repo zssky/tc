@@ -9,19 +9,19 @@ import (
 	"time"
 )
 
-const (
-	ContentTypeTextXml = "text/xml"
-	ContentTypeHtml    = "text/html; charset=utf-8"
-	ContentTypeTextCss = "text/css; charset=utf-8"
-	ContentTypeXJS     = "application/x-javascript"
-	ContentTypeJS      = "text/javascript"
-	ContentTypeJson    = "application/json; charset=utf-8"
-	ContentTypeForm    = "application/x-www-form-urlencoded"
-	ContentTypeImg     = "image/png"
+var (
+	ContentTypeTextXml = []byte("text/xml")
+	ContentTypeHtml    = []byte("text/html; charset=utf-8")
+	ContentTypeTextCss = []byte("text/css; charset=utf-8")
+	ContentTypeXJS     = []byte("application/x-javascript")
+	ContentTypeJS      = []byte("text/javascript")
+	ContentTypeJson    = []byte("application/json; charset=utf-8")
+	ContentTypeForm    = []byte("application/x-www-form-urlencoded")
+	ContentTypeImg     = []byte("image/png")
 )
 
 // Request - send an http Request
-func Request(method, url string, body io.Reader, contentType string, deadline time.Duration, dialTimeout time.Duration) ([]byte, int, error) {
+func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, contentType []byte) ([]byte, int, error) {
 	client := http.Client{
 		Transport: &http.Transport{
 			Dial: func(netw, addr string) (net.Conn, error) {
@@ -41,7 +41,10 @@ func Request(method, url string, body io.Reader, contentType string, deadline ti
 		return nil, 0, err
 	}
 
-	req.Header.Set("Content-Type", contentType)
+	if contentType != nil {
+		req.Header.Set("Content-Type", string(contentType))
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, 0, err
