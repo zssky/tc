@@ -9,11 +9,15 @@ Professional golang Tool Collection
 3. SSh
    ssh客户端工具，提供远程执行shell命令功能  
    提供执行shell命令工具
-
 4. Http
    提供Http访问接口以及通用的数据返回接口
+5. UUID 
+   提供UUID生成器  
 
-   
+6. Retry  
+   重试机制  
+
+
 
 持续更新中...   
 
