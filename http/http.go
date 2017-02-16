@@ -21,7 +21,7 @@ var (
 )
 
 // Request - send an http Request
-func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, contentType []byte) ([]byte, int, error) {
+func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
 	client := http.Client{
 		Transport: &http.Transport{
 			Dial: func(netw, addr string) (net.Conn, error) {
@@ -41,8 +41,10 @@ func Request(method, url string, body io.Reader, deadline, dialTimeout time.Dura
 		return nil, 0, err
 	}
 
-	if contentType != nil {
-		req.Header.Set("Content-Type", string(contentType))
+	if header != nil {
+		for key, value := range header {
+			req.Header.Set(key, value)
+		}
 	}
 
 	resp, err := client.Do(req)

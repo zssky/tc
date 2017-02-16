@@ -3,6 +3,7 @@ package tc
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -69,4 +70,20 @@ func GenUID() string {
 		}
 		return value
 	}
+}
+
+// JoinMap
+func JoinMap(params map[string]interface{}, sep string) []byte {
+	if params == nil {
+		return nil
+	}
+
+	var v string
+	for key, value := range params {
+		v += fmt.Sprintf("%v=%v%v", key, value, sep)
+	}
+
+	v = strings.TrimRight(v, sep)
+
+	return []byte(v)
 }
