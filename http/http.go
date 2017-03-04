@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -10,15 +11,25 @@ import (
 )
 
 var (
-	ContentTypeTextXml = []byte("text/xml")
-	ContentTypeHtml    = []byte("text/html; charset=utf-8")
-	ContentTypeTextCss = []byte("text/css; charset=utf-8")
-	ContentTypeXJS     = []byte("application/x-javascript")
-	ContentTypeJS      = []byte("text/javascript")
-	ContentTypeJson    = []byte("application/json; charset=utf-8")
-	ContentTypeForm    = []byte("application/x-www-form-urlencoded")
-	ContentTypeImg     = []byte("image/png")
+	ContentTypeTextXml = "text/xml"
+	ContentTypeHtml    = "text/html; charset=utf-8"
+	ContentTypeTextCss = "text/css; charset=utf-8"
+	ContentTypeXJS     = "application/x-javascript"
+	ContentTypeJS      = "text/javascript"
+	ContentTypeJson    = "application/json; charset=utf-8"
+	ContentTypeForm    = "application/x-www-form-urlencoded"
+	ContentTypeImg     = "image/png"
 )
+
+// PostJSON - send an http post json Request.
+func PostJSON(url string, data interface{}, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	buf, err := json.Marshal(data)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return Request(http.MethodPost, url, bytes.NewBuffer(buf), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeJson})
+}
 
 // Request - send an http Request
 func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
