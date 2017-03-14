@@ -31,6 +31,16 @@ func PostJSON(url string, data interface{}, deadline, dialTimeout time.Duration)
 	return Request(http.MethodPost, url, bytes.NewBuffer(buf), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeJson})
 }
 
+// PostForm - sen an http post form Request
+func PostForm(url string, data []byte, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	return Request(http.MethodPost, url, bytes.NewBuffer(data), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeForm})
+}
+
+// SimpleGet - send an http get Request
+func SimpleGet(url string, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	return Request(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil)
+}
+
 // Request - send an http Request
 func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
 	client := http.Client{

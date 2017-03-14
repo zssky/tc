@@ -3,6 +3,7 @@ package tc
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strconv"
@@ -86,4 +87,14 @@ func JoinMap(params map[string]interface{}, sep string) []byte {
 	v = strings.TrimRight(v, sep)
 
 	return []byte(v)
+}
+
+// EncodeJSON
+func EncodeJSON(v interface{}) ([]byte, error) {
+	return json.Marshal(v)
+}
+
+// DecodeJSON
+func DecodeJSON(data []byte, v interface{}) error {
+	return json.Unmarshal(data, v)
 }
