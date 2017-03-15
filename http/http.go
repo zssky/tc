@@ -41,6 +41,16 @@ func SimpleGet(url string, deadline, dialTimeout time.Duration) ([]byte, int, er
 	return Request(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil)
 }
 
+// SimpleDelete - send an simple http delete Request
+func SimpleDelete(url string, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	return Request(http.MethodDelete, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil)
+}
+
+// SimplePut - send an simple http put Request
+func SimplePut(url string, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	return Request(http.MethodPut, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil)
+}
+
 // Request - send an http Request
 func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
 	client := http.Client{
