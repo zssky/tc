@@ -94,9 +94,9 @@ func Request(method, url string, body io.Reader, deadline, dialTimeout time.Dura
 
 // HttpResponse - htt Response
 type HttpResponse struct {
-	Code    int                    `json:"Code"`
-	Message string                 `json:"Message"`
-	Data    map[string]interface{} `json:"Data,omitempty"`
+	Code    int         `json:"Code"`
+	Message string      `json:"Message"`
+	Data    interface{} `json:"Data,omitempty"`
 }
 
 // NewHttpResponse -
@@ -104,7 +104,6 @@ func NewHttpResponse() *HttpResponse {
 	return &HttpResponse{
 		Code:    0,
 		Message: "success",
-		Data:    make(map[string]interface{}),
 	}
 }
 
