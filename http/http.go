@@ -130,3 +130,9 @@ func (h *HttpResponse) Error(err error) {
 	h.Code = 1
 	h.Message = err.Error()
 }
+
+// RespData user for bootstrap
+type RespData struct {
+	Total int64       `json:"total"`
+	Rows  interface{} `json:"rows"`
+}
