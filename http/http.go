@@ -2,6 +2,7 @@ package http
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -63,6 +64,9 @@ func Request(method, url string, body io.Reader, deadline, dialTimeout time.Dura
 				}
 				c.SetDeadline(deadline)
 				return c, nil
+			},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
 			},
 		},
 	}
