@@ -22,6 +22,22 @@ var params = []param{
 		data: []byte("测试"),
 		hash: -18718088446212349,
 	},
+	param{
+		data: []byte("测试1hello world"),
+		hash: 6682620565324616919,
+	},
+	param{
+		data: []byte("hell测试编码o world"),
+		hash: -434759769599644576,
+	},
+	param{
+		data: []byte("he我的测试编码llo world"),
+		hash: 8070307409891745327,
+	},
+	param{
+		data: []byte("hello world哈哈，测试"),
+		hash: 6663914289503119216,
+	},
 }
 
 func TestCityHash64(t *testing.T) {

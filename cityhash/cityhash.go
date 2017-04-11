@@ -4,16 +4,19 @@ import (
 	"fmt"
 )
 
-type CityHash struct {
-}
-
+// CityHash64 - city hash for java
 func CityHash64(data []byte, length int64) (int64, error) {
-	c := CityHash{}
 
-	return c.Hash64(data, length, int64(-294967317))
+	// convert byte to int8
+	var a []int8
+	for _, c := range data {
+		a = append(a, int8(c))
+	}
+
+	return hash64(a, length, int64(-294967317))
 }
 
-func (c *CityHash) Hash64(data []byte, length, seed int64) (int64, error) {
+func hash64(data []int8, length, seed int64) (int64, error) {
 	var h1 int64 = seed&4294967295 ^ length
 	var h2 int64 = 0
 	var h int64 = 0
@@ -48,23 +51,23 @@ func (c *CityHash) Hash64(data []byte, length, seed int64) (int64, error) {
 
 	switch length - i {
 	case 3:
-		h2 ^= (int64)(int64(data[i+2]) << 16)
+		h2 ^= (int64)((int64(data[i+2])) << 16)
 		fallthrough
 	case 2:
-		h2 ^= (int64)(int64(data[i+1]) << 8)
+		h2 ^= (int64)(((int64)(data[i+1])) << 8)
 		fallthrough
 	case 1:
 		h2 ^= (int64)(data[i+0])
 		h2 *= 1540483477
 		fallthrough
 	case 0:
-		h1 ^= h2 >> 18
+		h1 ^= (h2 >> 18)
 		h1 *= 1540483477
-		h2 ^= h1 >> 22
+		h2 ^= (h1 >> 22)
 		h2 *= 1540483477
-		h1 ^= h2 >> 17
+		h1 ^= (h2 >> 17)
 		h1 *= 1540483477
-		h2 ^= h1 >> 19
+		h2 ^= (h1 >> 19)
 		h2 *= 1540483477
 		h = h1<<32 | h2
 		return h, nil
