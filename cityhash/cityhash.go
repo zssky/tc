@@ -14,8 +14,6 @@ func CityHash64(data []byte, length int64) (int64, error) {
 }
 
 func (c *CityHash) Hash64(data []byte, length, seed int64) (int64, error) {
-	//var m int64 = 1540483477
-	//var r bool = true
 	var h1 int64 = seed&4294967295 ^ length
 	var h2 int64 = 0
 	var h int64 = 0
@@ -74,5 +72,4 @@ func (c *CityHash) Hash64(data []byte, length, seed int64) (int64, error) {
 	}
 
 	return 0, fmt.Errorf("cityhash error")
-
 }
