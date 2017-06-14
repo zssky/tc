@@ -23,7 +23,7 @@ func RunCommand(name string, args ...string) (string, error) {
 }
 
 // RunCommandContext - run context Command
-func RunCommandContext(ctx context.Context, name, args ...string) (string, error) {
+func RunCommandContext(ctx context.Context, name string, args ...string) (string, error) {
 	var out, berr bytes.Buffer
 	cmd := exec.CommandContext(ctx, name, args...)
 	cmd.Stdout = &out
