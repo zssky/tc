@@ -52,6 +52,11 @@ func SimplePut(url string, deadline, dialTimeout time.Duration) ([]byte, int, er
 	return Request(http.MethodPut, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil)
 }
 
+// CookiesGet - send an http get Request, response cookies
+func CookiesGet(url string, deadline, dialTimeout time.Duration) ([]byte, []*http.Cookie, error) {
+	return RequestCookies(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil, nil)
+}
+
 // Request - send an http Request
 func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
 	client := http.Client{
@@ -94,6 +99,55 @@ func Request(method, url string, body io.Reader, deadline, dialTimeout time.Dura
 		return nil, 0, err
 	}
 	return data, resp.StatusCode, nil
+}
+
+// RequestCookies - send an http Request with cookies
+func RequestCookies(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string, cookies []*http.Cookie) ([]byte, []*http.Cookie, error) {
+	client := http.Client{
+		Transport: &http.Transport{
+			Dial: func(netw, addr string) (net.Conn, error) {
+				deadline := time.Now().Add(deadline)
+				c, err := net.DialTimeout(netw, addr, dialTimeout)
+				if err != nil {
+					return nil, err
+				}
+				c.SetDeadline(deadline)
+				return c, nil
+			},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if header != nil {
+		for key, value := range header {
+			req.Header.Set(key, value)
+		}
+	}
+
+	for _, c := range cookies {
+		req.AddCookie(c)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return data, resp.Cookies(), nil
 }
 
 // HttpResponse - htt Response

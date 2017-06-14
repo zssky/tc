@@ -1,7 +1,8 @@
-package ssh
+package exec
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os/exec"
 )
@@ -19,6 +20,20 @@ func RunCommand(name string, args ...string) (string, error) {
 
 	return out.String(), nil
 
+}
+
+// RunCommandContext - run context Command
+func RunCommandContext(ctx context.Context, name, args ...string) (string, error) {
+	var out, berr bytes.Buffer
+	cmd := exec.CommandContext(ctx, name, args...)
+	cmd.Stdout = &out
+	cmd.Stderr = &berr
+
+	if err := cmd.Run(); err != nil {
+		return out.String(), fmt.Errorf("err:%v berr:%v", err, berr.String())
+	}
+
+	return out.String(), nil
 }
 
 // RunShellCommand - run shell command
