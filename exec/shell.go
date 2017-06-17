@@ -18,7 +18,7 @@ func RunCommand(name string, args ...string) (string, error) {
 		return out.String(), fmt.Errorf("err:%v berr:%v", err, berr.String())
 	}
 
-	return out.String(), nil
+	return out.String() + berr.String(), nil
 
 }
 
@@ -33,7 +33,7 @@ func RunCommandContext(ctx context.Context, name string, args ...string) (string
 		return out.String(), fmt.Errorf("err:%v berr:%v", err, berr.String())
 	}
 
-	return out.String(), nil
+	return out.String() + berr.String(), nil
 }
 
 // RunShellCommand - run shell command
@@ -47,5 +47,5 @@ func RunShellCommand(shell string) (string, error) {
 		return out.String(), fmt.Errorf("err:%v berr:%v", err, berr.String())
 	}
 
-	return out.String(), nil
+	return out.String() + berr.String(), nil
 }
