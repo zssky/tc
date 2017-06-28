@@ -53,8 +53,8 @@ func SimplePut(url string, deadline, dialTimeout time.Duration) ([]byte, int, er
 }
 
 // CookiesGet - send an http get Request, response cookies
-func CookiesGet(url string, deadline, dialTimeout time.Duration) ([]byte, []*http.Cookie, error) {
-	return RequestCookies(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil, nil)
+func CookiesGet(url string, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, []*http.Cookie, error) {
+	return RequestCookies(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, header, nil)
 }
 
 // Request - send an http Request
