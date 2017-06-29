@@ -3,6 +3,7 @@ package ssh
 import (
 	"bytes"
 	"fmt"
+	"net"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -28,6 +29,9 @@ func NewSShClient(host string, port int, user, passwd string) *SShClient {
 			Auth: []ssh.AuthMethod{
 				ssh.Password(passwd),
 			},
+			HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+				return nil
+			},
 		},
 	}
 }
@@ -38,6 +42,8 @@ func (s *SShClient) ExecCmd(cmd string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Cannot build SSH connection to database server, for %s", err)
 	}
+
+	defer client.Close()
 
 	session, err := client.NewSession()
 	if err != nil {

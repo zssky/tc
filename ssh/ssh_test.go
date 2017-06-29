@@ -7,7 +7,7 @@ import (
 const (
 	ssh_host = "127.0.0.1"
 	ssh_port = 22
-	ssh_user = "guowei"
+	ssh_user = "root"
 	ssh_pwd  = "guowei"
 )
 
