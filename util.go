@@ -98,3 +98,16 @@ func EncodeJSON(v interface{}) ([]byte, error) {
 func DecodeJSON(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
+
+// InterfaceToJson
+// marshal data to json data
+// if success return string with json format
+// if not return empty string
+func InterfaceToJson(data interface{}) string {
+	enc, err := json.Marshal(data)
+	if err != nil {
+		return ""
+	}
+
+	return string(enc)
+}
