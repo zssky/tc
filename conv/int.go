@@ -5,8 +5,8 @@ import (
 	"strconv"
 )
 
-// ConvStringToInt64 - Convert string to type int64
-func ConvStringToInt64(v string) (int64, error) {
+// StringToInt64 - Convert string to type int64
+func StringToInt64(v string) (int64, error) {
 	i, err := strconv.ParseInt(v, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf(v + " is not int64 type")
@@ -15,9 +15,9 @@ func ConvStringToInt64(v string) (int64, error) {
 	return i, nil
 }
 
-// ConvStringToInt - Convert string to type int
-func ConvStringToInt(v string) (int, error) {
-	i, err := ConvStringToInt64(v)
+// StringToInt - Convert string to type int
+func StringToInt(v string) (int, error) {
+	i, err := StringToInt64(v)
 	if err != nil {
 		return 0, err
 	}
@@ -25,8 +25,18 @@ func ConvStringToInt(v string) (int, error) {
 	return int(i), nil
 }
 
+// BoolToInt - Convert bool value to type int
+func BoolToInt(v bool) (int64, error) {
+	i, err := StringToInt64(fmt.Sprintf("%d", v))
+	if err != nil {
+		return 0, err
+	}
+
+	return i, nil
+}
+
 // CheckMapKeyToInt64 - Check whether the Map Key is int64 type and return value
-func ConvMapKeyToInt64(m map[string]interface{}, key string) (int64, error) {
+func CheckMapKeyToInt64(m map[string]interface{}, key string) (int64, error) {
 	if _, ok := m[key]; !ok {
 		return 0, fmt.Errorf(key + " is nil")
 	}
@@ -45,7 +55,7 @@ func ConvMapKeyToInt64(m map[string]interface{}, key string) (int64, error) {
 }
 
 // CheckMapKeyToInt - Check whether the Map Key it int64 type and return value
-func ConvMapKeyToInt(m map[string]interface{}, key string) (int, error) {
+func CheckMapKeyToInt(m map[string]interface{}, key string) (int, error) {
 	if _, ok := m[key]; !ok {
 		return 0, fmt.Errorf(key + " is nil")
 	}

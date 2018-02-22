@@ -16,6 +16,6 @@ func TestConvToString(t *testing.T) {
 	}
 
 	for _, param := range params {
-		t.Logf("%s", ConvToString(param))
+		t.Logf("%s", InterfaceToString(param))
 	}
 }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// ConvToString - Convert value to string type
-func ConvToString(i interface{}) string {
+// InterfaceToString - Convert value to string type
+func InterfaceToString(i interface{}) string {
 	return fmt.Sprintf("%v", i)
 }
 

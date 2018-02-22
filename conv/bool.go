@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// ConvIntToBool - Convert Int to type bool
-func ConvIntToBool(v int) bool {
+// IntToBool - Convert Int to type bool
+func IntToBool(v int) bool {
 	if v > 0 {
 		return true
 	}
@@ -13,9 +13,9 @@ func ConvIntToBool(v int) bool {
 	return false
 }
 
-// ConvInt64ToBool - Convert Int64 to type bool
-func ConvInt64ToBool(v int64) bool {
-	return ConvIntToBool(int(v))
+// Int64ToBool - Convert Int64 to type bool
+func Int64ToBool(v int64) bool {
+	return IntToBool(int(v))
 }
 
 // CheckMapKeyToBool - Check Map key whether is bool type and return value
