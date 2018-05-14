@@ -57,6 +57,56 @@ func CookiesGet(url string, deadline, dialTimeout time.Duration, header map[stri
 	return RequestCookies(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, header, nil)
 }
 
+// GetRequestWithBasicAuth - get request with Basic Auth
+func GetRequestWithBasicAuth(url string, deadline, dialTimeout time.Duration, username, password string) ([]byte, int, error) {
+	return BasicAuthRequest(http.MethodGet, url, bytes.NewBuffer(nil), deadline, dialTimeout, nil, username, password)
+}
+
+// BasicAuthRequest - send an http Request
+func BasicAuthRequest(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string, username, password string) ([]byte, int, error) {
+	client := http.Client{
+		Transport: &http.Transport{
+			Dial: func(netw, addr string) (net.Conn, error) {
+				deadline := time.Now().Add(deadline)
+				c, err := net.DialTimeout(netw, addr, dialTimeout)
+				if err != nil {
+					return nil, err
+				}
+				c.SetDeadline(deadline)
+				return c, nil
+			},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if header != nil {
+		for key, value := range header {
+			req.Header.Set(key, value)
+		}
+	}
+
+	req.SetBasicAuth(username, password)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+	return data, resp.StatusCode, nil
+}
+
 // Request - send an http Request
 func Request(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string) ([]byte, int, error) {
 	client := http.Client{
