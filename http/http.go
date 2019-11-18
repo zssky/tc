@@ -32,6 +32,16 @@ func PostJSON(url string, data interface{}, deadline, dialTimeout time.Duration)
 	return Request(http.MethodPost, url, bytes.NewBuffer(buf), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeJson})
 }
 
+// PatchJSON - send an http patch json Request.
+func PatchJSON(url string, data interface{}, deadline, dialTimeout time.Duration) ([]byte, int, error) {
+	buf, err := json.Marshal(data)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return Request(http.MethodPatch, url, bytes.NewBuffer(buf), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeJson})
+}
+
 // PostForm - sen an http post form Request
 func PostForm(url string, data []byte, deadline, dialTimeout time.Duration) ([]byte, int, error) {
 	return Request(http.MethodPost, url, bytes.NewBuffer(data), deadline, dialTimeout, map[string]string{"Content-Type": ContentTypeForm})
