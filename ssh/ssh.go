@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"time"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -18,7 +19,7 @@ type SShClient struct {
 }
 
 // NewSShClient - create an new SShClient
-func NewSShClient(host string, port int, user, passwd string) *SShClient {
+func NewSShClient(host string, port int, user, passwd string, timeout time.Duration) *SShClient {
 	return &SShClient{
 		host:   host,
 		port:   port,
@@ -32,6 +33,7 @@ func NewSShClient(host string, port int, user, passwd string) *SShClient {
 			HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 				return nil
 			},
+			Timeout: timeout,
 		},
 	}
 }
