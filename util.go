@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 	"unicode"
@@ -110,4 +111,30 @@ func InterfaceToJson(data interface{}) string {
 	}
 
 	return string(enc)
+}
+
+// Exists - check whether the file or path exist
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
+// IsDir - check whether the path is dir
+func IsDir(path string) bool {
+	s, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return s.IsDir()
+}
+
+// IsFile - check whether the path is file
+func IsFile(path string) bool {
+	return !IsDir(path)
 }
