@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	netURL "net/url"
 	"time"
 )
 
@@ -21,6 +22,13 @@ var (
 	ContentTypeForm    = "application/x-www-form-urlencoded"
 	ContentTypeImg     = "image/png"
 )
+
+// Proxy - http proxy config
+type Proxy struct {
+	URL      string `json:"url"`
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
+}
 
 // PostJSON - send an http post json Request.
 func PostJSON(url string, data interface{}, deadline, dialTimeout time.Duration) ([]byte, int, error) {
@@ -208,6 +216,60 @@ func RequestCookies(method, url string, body io.Reader, deadline, dialTimeout ti
 	}
 
 	return data, resp.Cookies(), nil
+}
+
+// RequestWithProxy - send an http Request with http proxy
+func RequestWithProxy(method, url string, body io.Reader, deadline, dialTimeout time.Duration, header map[string]string, proxy *Proxy) ([]byte, int, error) {
+	tr := &http.Transport{
+		Dial: func(netw, addr string) (net.Conn, error) {
+			deadline := time.Now().Add(deadline)
+			c, err := net.DialTimeout(netw, addr, dialTimeout)
+			if err != nil {
+				return nil, err
+			}
+			c.SetDeadline(deadline)
+			return c, nil
+		},
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
+	if proxy != nil && proxy.URL != "" {
+		proxyUrl, err := netURL.Parse(proxy.URL)
+		if err == nil { // 使用传入代理
+			if proxy.UserName != "" && proxy.Password != "" {
+				proxyUrl.User = netURL.UserPassword(proxy.UserName, proxy.Password)
+			}
+			tr.Proxy = http.ProxyURL(proxyUrl)
+		}
+	}
+
+	client := http.Client{Transport: tr}
+
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if header != nil {
+		for key, value := range header {
+			req.Header.Set(key, value)
+		}
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+	return data, resp.StatusCode, nil
 }
 
 // HttpResponse - htt Response
